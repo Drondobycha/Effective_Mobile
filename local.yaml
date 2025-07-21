@@ -1,0 +1,6 @@
+# Database configuration
+database_url: "postgres://postgres:12345678@localhost:5432/subscription"
+# Server configuration
+port: "8080"
+# Logging level (debug, info, warn, error)
+log_level: "info"
