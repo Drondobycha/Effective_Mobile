@@ -1,0 +1,4 @@
+database:
+  url: "postgres://postgres:12345678@localhost:5432/subscription"
+  migrations_path: "./migrations"
+  migrations_table: "migrations"

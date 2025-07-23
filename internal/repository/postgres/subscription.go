@@ -18,9 +18,22 @@ type SubscriptionRepo struct {
 	logger *zap.Logger
 }
 
+// NewSubscriptionRepo создает новый экземпляр SubscriptionRepo
+// @param db - подключение к PostgreSQL
+// @param logger - логгер
+// @return *SubscriptionRepo
+
 func NewSubscriptionRepo(db *sqlx.DB, logger *zap.Logger) *SubscriptionRepo {
 	return &SubscriptionRepo{db: db, logger: logger}
 }
+
+// Create создает новую подписку
+// @Summary Создать подписку
+// @Description Создает новую запись о подписке в базе данных
+// @Param sub body models.Subscription true "Данные подписки"
+// @Success 201 {object} models.Subscription
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
 
 func (r *SubscriptionRepo) Create(ctx context.Context, sub *models.Subscription) error {
 	query := `INSERT INTO subscriptions (id, service_name, price, user_id, start_date, end_date) 
@@ -43,6 +56,14 @@ func (r *SubscriptionRepo) Create(ctx context.Context, sub *models.Subscription)
 	return err
 }
 
+// GetByID получает подписку по ID
+// @Summary Получить подписку
+// @Description Возвращает подписку по указанному UUID
+// @Param id path string true "UUID подписки"
+// @Success 200 {object} models.Subscription
+// @Failure 404 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+
 func (r *SubscriptionRepo) GetByID(ctx context.Context, id uuid.UUID) (*models.Subscription, error) {
 	r.logger.Debug("Getting subscription by ID", zap.String("id", id.String()))
 
@@ -61,6 +82,15 @@ func (r *SubscriptionRepo) GetByID(ctx context.Context, id uuid.UUID) (*models.S
 	}
 	return &sub, err
 }
+
+// Update обновляет данные подписки
+// @Summary Обновить подписку
+// @Description Обновляет данные существующей подписки
+// @Param id path string true "UUID подписки"
+// @Param update body models.SubscriptionUpdate true "Обновляемые данные"
+// @Success 200
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
 
 func (r *SubscriptionRepo) Update(ctx context.Context, id uuid.UUID, update *models.SubscriptionUpdate) error {
 	r.logger.Info("Updating subscription",
@@ -97,6 +127,13 @@ func (r *SubscriptionRepo) Update(ctx context.Context, id uuid.UUID, update *mod
 	return err
 }
 
+// Delete удаляет подписку
+// @Summary Удалить подписку
+// @Description Удаляет подписку по указанному UUID
+// @Param id path string true "UUID подписки"
+// @Success 204
+// @Failure 500 {object} models.ErrorResponse
+
 func (r *SubscriptionRepo) Delete(ctx context.Context, id uuid.UUID) error {
 	r.logger.Info("Deleting subscription", zap.String("id", id.String()))
 
@@ -111,6 +148,12 @@ func (r *SubscriptionRepo) Delete(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// List возвращает список всех подписок
+// @Summary Список подписок
+// @Description Возвращает все подписки из базы данных
+// @Success 200 {array} models.Subscription
+// @Failure 500 {object} models.ErrorResponse
+
 func (r *SubscriptionRepo) List(ctx context.Context) ([]*models.Subscription, error) {
 	r.logger.Debug("Listing all subscriptions")
 
@@ -122,6 +165,14 @@ func (r *SubscriptionRepo) List(ctx context.Context) ([]*models.Subscription, er
 	}
 	return subs, err
 }
+
+// CalculateTotalCost вычисляет суммарную стоимость подписок
+// @Summary Расчет стоимости
+// @Description Вычисляет суммарную стоимость подписок за указанный период с возможностью фильтрации
+// @Param req body models.TotalCostRequest true "Параметры расчета"
+// @Success 200 {object} models.TotalCostResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
 
 func (r *SubscriptionRepo) CalculateTotalCost(ctx context.Context, req *models.TotalCostRequest) (int, error) {
 	r.logger.Info("Calculating total cost",

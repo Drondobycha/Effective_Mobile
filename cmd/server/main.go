@@ -13,11 +13,25 @@ import (
 	"sub_service/internal/repository/postgres"
 	"sub_service/internal/service"
 
+	_ "sub_service/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
+
+// @title Subscription Service API
+// @version 1.0
+// @description API для управления подписками пользователей
+
+// @contact.name API Support
+// @contact.email support@subscription-service.com
+
+// @host localhost:8080
+// @BasePath /api/v1
 
 func main() {
 	// Инициализация логгера
@@ -44,6 +58,8 @@ func main() {
 
 	// Настройка роутера
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Добавление middleware для логирования запросов
 	router.Use(func(c *gin.Context) {

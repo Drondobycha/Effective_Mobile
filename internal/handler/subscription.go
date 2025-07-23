@@ -1,3 +1,13 @@
+// @Title Subscription Service API
+// @Version 1.0
+// @Description API для управления подписками пользователей
+
+// @Contact.name API Support
+// @Contact.email rodnynskiy@gmail.com
+
+// @Host localhost:8080
+// @BasePath /api/v1
+
 package handler
 
 import (
@@ -19,6 +29,17 @@ type SubscriptionHandler struct {
 func NewSubscriptionHandler(service *service.SubscriptionService, logger *zap.Logger) *SubscriptionHandler {
 	return &SubscriptionHandler{service: service, logger: logger}
 }
+
+// CreateSubscription godoc
+// @Summary Создать новую подписку
+// @Tags Subscriptions
+// @Accept json
+// @Produce json
+// @Param input body models.SubscriptionCreate true "Данные подписки"
+// @Success 201 {object} models.Subscription
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions [post]
 
 func (h *SubscriptionHandler) Create(c *gin.Context) {
 	var create models.SubscriptionCreate
@@ -51,6 +72,16 @@ func (h *SubscriptionHandler) Create(c *gin.Context) {
 	)
 	c.JSON(http.StatusCreated, sub)
 }
+
+// GetSubscriptionByID godoc
+// @Summary Получить подписку по ID
+// @Tags Subscriptions
+// @Produce json
+// @Param id path string true "ID подписки"
+// @Success 200 {object} models.Subscription
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions/{id} [get]
 
 func (h *SubscriptionHandler) Get(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
@@ -90,6 +121,17 @@ func (h *SubscriptionHandler) Get(c *gin.Context) {
 	)
 	c.JSON(http.StatusOK, sub)
 }
+
+// UpdateSubscription godoc
+// @Summary Обновить подписку
+// @Tags Subscriptions
+// @Accept json
+// @Param id path string true "ID подписки"
+// @Param input body models.SubscriptionUpdate true "Обновляемые данные"
+// @Success 200
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions/{id} [put]
 
 func (h *SubscriptionHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
@@ -132,6 +174,14 @@ func (h *SubscriptionHandler) Update(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+// DeleteSubscription godoc
+// @Summary Удалить подписку
+// @Tags Subscriptions
+// @Param id path string true "ID подписки"
+// @Success 204
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions/{id} [delete]
+
 func (h *SubscriptionHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -162,6 +212,14 @@ func (h *SubscriptionHandler) Delete(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
+// GetSubscriptions godoc
+// @Summary Получить список всех подписок
+// @Tags Subscriptions
+// @Produce json
+// @Success 200 {array} models.Subscription
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions [get]
+
 func (h *SubscriptionHandler) List(c *gin.Context) {
 	h.logger.Debug("Handling list subscriptions request")
 
@@ -179,6 +237,17 @@ func (h *SubscriptionHandler) List(c *gin.Context) {
 	)
 	c.JSON(http.StatusOK, subs)
 }
+
+// CalculateTotalCost godoc
+// @Summary Рассчитать суммарную стоимость
+// @Tags Subscriptions
+// @Accept json
+// @Produce json
+// @Param input body models.TotalCostRequest true "Параметры расчета"
+// @Success 200 {object} models.TotalCostResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /subscriptions/total-cost [post]
 
 func (h *SubscriptionHandler) CalculateTotalCost(c *gin.Context) {
 	var req models.TotalCostRequest

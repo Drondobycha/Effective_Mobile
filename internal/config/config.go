@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	DatabaseURL string `yaml:"database_url" env-required:"true"`
+	DatabaseURL string `yaml:"database_url" env:"DATABASE_URL" env-required:"true"`
 	Port        string `yaml:"port" env-default:"8080"`
 	LogLevel    string `yaml:"log_level" env-default:"info"`
 }

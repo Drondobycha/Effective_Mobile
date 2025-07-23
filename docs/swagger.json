@@ -1,0 +1,15 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API для управления подписками пользователей",
+        "title": "Subscription Service API",
+        "contact": {
+            "name": "API Support",
+            "email": "support@subscription-service.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}

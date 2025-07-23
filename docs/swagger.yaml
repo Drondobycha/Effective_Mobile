@@ -1,0 +1,11 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: support@subscription-service.com
+    name: API Support
+  description: API для управления подписками пользователей
+  title: Subscription Service API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
